@@ -1,0 +1,1 @@
+require './museum_things'
