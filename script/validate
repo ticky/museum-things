@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+echo "--- :ruby: Checking Ruby is valid"
+find . -name '*.rb' -exec sh -c "echo \#\# Checking {}; ruby -c '{}';echo" \;
+echo '✌🏼 All good!'

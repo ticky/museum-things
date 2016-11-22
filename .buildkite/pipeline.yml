@@ -1,4 +1,4 @@
 steps:
 
-  - name: ":ruby: Checking the code parses..."
-    command: "ruby -c $(find . -name '*.rb') && echo '✌🏼 All good!'"
+  - name: ":sleuth_or_spy: Validate code"
+    command: "script/validate"
