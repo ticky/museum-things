@@ -1,0 +1,4 @@
+steps:
+
+  - name: ":ruby: Checking all the code parses..."
+    command: "ruby -c ./**/*.rb && echo '✌🏼 All good!'"
