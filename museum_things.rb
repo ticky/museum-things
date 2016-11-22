@@ -16,7 +16,7 @@ WITTY_RESPONSES = [
 UNSUCCESSFUL_RESPONSES = [
   "I tried my hardest, but couldn't find it. Here's something else.",
   "Here's what I'd rather do.",
-  'How about this instead?'.
+  'How about this instead?',
   'This is kind of what you wanted, right?'
 ]
 
