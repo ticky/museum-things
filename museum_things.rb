@@ -13,6 +13,13 @@ WITTY_RESPONSES = [
   'I painstakingly trawled the archives, and…'
 ]
 
+UNSUCCESSFUL_RESPONSES = [
+  "I tried my hardest, but couldn't find it. Here's something else.",
+  "Here's what I'd rather do.",
+  'How about this instead?'.
+  'This is kind of what you wanted, right?'
+]
+
 LICENSES = [
   'public domain',
   'cc by',
@@ -20,6 +27,8 @@ LICENSES = [
 ]
 
 class MuseumThingsBot < Ebooks::Bot
+  class NoRecordFound < Exception; end
+
   def configure
     # Consumer details come from registering an app at https://dev.twitter.com/
     # Once you have consumer details, use "ebooks auth" for new access tokens
@@ -46,8 +55,8 @@ class MuseumThingsBot < Ebooks::Bot
     total_pages = meta_response.headers['total-pages'].to_i
 
     if !query.nil? && total_items == 0 then
-      log "Nothing found, starting over..."
-      return get_something_to_tweet
+      log "Nothing found..."
+      raise NoRecordFound, "Nothing found for query '#{query}'"
     end
 
     log "Got initial pagination request. #{total_items} items on #{total_pages} pages."
@@ -99,8 +108,13 @@ class MuseumThingsBot < Ebooks::Bot
   # end
 
   def on_message(dm)
-    tweet = make_public_tweet(dm.text)
-    reply(dm, "#{WITTY_RESPONSES.sample} It's up at #{tweet.uri}")
+    begin
+      tweet = make_public_tweet(dm.text)
+      reply(dm, "#{WITTY_RESPONSES.sample} It's up at #{tweet.uri}")
+    rescue NoRecordFound
+      tweet = make_public_tweet()
+      reply(dm, "#{UNSUCCESSFUL_RESPONSES.sample} It's up at #{tweet.uri}")
+    end
   end
 
   def on_startup
