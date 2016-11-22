@@ -1,4 +1,4 @@
 steps:
 
-  - name: ":ruby: Checking all the code parses..."
-    command: "ruby -c ./**/*.rb && echo '✌🏼 All good!'"
+  - name: ":ruby: Checking the code parses..."
+    command: "ruby -c $(find . -name '*.rb') && echo '✌🏼 All good!'"
