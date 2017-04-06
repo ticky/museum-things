@@ -47,31 +47,28 @@ class MuseumThingsBot < Ebooks::Bot
     if !query.nil? then
       log "(Query is \"#{query}\")"
     end
-    meta_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, page: 10000000, query: query }
+    meta_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, perpage: 1, page: 1000000000, query: query }
 
     log "Fetched #{meta_response.request.last_uri.to_s}"
 
     total_items = meta_response.headers['total-results'].to_i
-    total_pages = meta_response.headers['total-pages'].to_i
 
     if !query.nil? && total_items == 0 then
       log "Nothing found..."
       raise NoRecordFound, "Nothing found for query '#{query}'"
     end
 
-    log "Got initial pagination request. #{total_items} items on #{total_pages} pages."
+    log "Got initial pagination request. #{total_items} items."
 
     select_item = Random.rand total_items
-    select_page = (select_item / 40).floor
-    index_on_page = select_item % 40
 
-    log "Seeking to page ##{select_page} for item #{select_item} (will be ##{index_on_page} on page)..."
+    log "Seeking to item #{select_item}..."
 
-    items_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, page: select_page, query: query }
+    items_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, perpage: 1, page: select_item, query: query }
 
     log "Fetched #{items_response.request.last_uri.to_s}"
 
-    selected_thing = items_response[index_on_page];
+    selected_thing = items_response[0];
 
     thing_name = selected_thing['title'] || selected_thing['objectName']
     thing_image = selected_thing['media'].select{|media| !media['caption'].nil? && !media['large'].nil?}.sample
