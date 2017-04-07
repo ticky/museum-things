@@ -2,8 +2,6 @@ require 'twitter_ebooks'
 require 'httparty'
 require 'open-uri'
 
-SEARCH_URI = 'https://collections.museumvictoria.com.au/api/search'
-
 WITTY_RESPONSES = [
   'OK!',
   'Done!',
@@ -47,28 +45,28 @@ class MuseumThingsBot < Ebooks::Bot
     if !query.nil? then
       log "(Query is \"#{query}\")"
     end
-    meta_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, perpage: 1, page: 1000000000, query: query }
 
-    log "Fetched #{meta_response.request.last_uri.to_s}"
+    items_response = HTTParty.get(
+      'https://collections.museumvictoria.com.au/api/search',
+      query: {
+        hasimages: 'yes',
+        imagelicence: imagelicence,
+        perpage: 1,
+        sort: 'random',
+        query: query
+      }
+    )
 
-    total_items = meta_response.headers['total-results'].to_i
+    log "Fetched #{items_response.request.last_uri.to_s}"
+
+    total_items = items_response.headers['total-results'].to_i
 
     if !query.nil? && total_items == 0 then
       log "Nothing found..."
       raise NoRecordFound, "Nothing found for query '#{query}'"
     end
 
-    log "Got initial pagination request. #{total_items} items."
-
-    select_item = Random.rand total_items
-
-    log "Seeking to item #{select_item}..."
-
-    items_response = HTTParty.get SEARCH_URI, query: { hasimages: 'yes', imagelicence: imagelicence, perpage: 1, page: select_item, query: query }
-
-    log "Fetched #{items_response.request.last_uri.to_s}"
-
-    selected_thing = items_response[0];
+    selected_thing = items_response.first;
 
     thing_name = selected_thing['title'] || selected_thing['objectName']
     thing_image = selected_thing['media'].select{|media| !media['caption'].nil? && !media['large'].nil?}.sample
