@@ -2,7 +2,7 @@ require 'twitter_ebooks'
 require 'httparty'
 require 'open-uri'
 
-SEARCH_URI = 'http://collections.museumvictoria.com.au/api/search'
+SEARCH_URI = 'https://collections.museumvictoria.com.au/api/search'
 
 WITTY_RESPONSES = [
   'OK!',
@@ -89,7 +89,7 @@ class MuseumThingsBot < Ebooks::Bot
 
     log "Thing is #{selected_thing['id']}, #{thing_name}, image at #{thing_image_uri}."
 
-    thing_tweet = "#{thing_name} http://collections.museumvictoria.com.au/#{selected_thing['id']}"
+    thing_tweet = "#{thing_name} https://collections.museumvictoria.com.au/#{selected_thing['id']}"
 
     [thing_tweet, open(thing_image_uri)]
   end
