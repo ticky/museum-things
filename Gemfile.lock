@@ -1,8 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.5.0)
-      public_suffix (~> 2.0, >= 2.0.2)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     awesome_print (1.7.0)
     buftok (0.2.0)
     coderay (1.1.1)
@@ -42,7 +42,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    public_suffix (2.0.4)
+    public_suffix (4.0.6)
     rufus-scheduler (3.2.2)
     simple_oauth (0.3.1)
     slop (3.6.0)
